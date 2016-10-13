@@ -19,7 +19,9 @@ angular.module('ui.bootstrap.position', [])
     var BODY_SCROLLBAR_WIDTH;
     var OVERFLOW_REGEX = {
       normal: /(auto|scroll)/,
-      hidden: /(auto|scroll|hidden)/
+      hidden: /(auto|scroll|hidden)/,
+      normalBody: /(auto|scroll|visible)/,
+      hiddenBody: /(auto|scroll|visible|hidden)/
     };
     var PLACEMENT_REGEX = {
       auto: /\s?auto?\s?/i,
@@ -154,8 +156,12 @@ angular.module('ui.bootstrap.position', [])
        */
       isScrollable: function(elem, includeHidden) {
         elem = this.getRawNode(elem);
-
-        var overflowRegex = includeHidden ? OVERFLOW_REGEX.hidden : OVERFLOW_REGEX.normal;
+        var overflowRegex;
+        if (elem.tagName.toLowerCase() === 'body') {
+            overflowRegex = includeHidden ? OVERFLOW_REGEX.hiddenBody : OVERFLOW_REGEX.normalBody;
+        } else {
+            overflowRegex = includeHidden ? OVERFLOW_REGEX.hidden : OVERFLOW_REGEX.normal;
+        }
         var elemStyle = $window.getComputedStyle(elem);
         return overflowRegex.test(elemStyle.overflow + elemStyle.overflowY + elemStyle.overflowX);
       },
